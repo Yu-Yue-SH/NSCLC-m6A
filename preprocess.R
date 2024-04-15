@@ -39,7 +39,26 @@ NSCLC@reductions$umap <- re_umap
 NSCLC <- readRDS('outputs/NSCLC_renamed.rds')
 
 
-# same process to core data ####
+# extract metadata ####
+meta_data <- NSCLC@meta.data
+
+# saveRDS(meta_data, 'outputs/meta_data.rds')
+meta_data <- readRDS('outputs/meta_data.rds')
+
+
+# rerun umap ####
+NSCLC <- RunUMAP(
+  NSCLC,
+  reduction = 'scANVI',
+  dims = 1:10,
+  reduction.name = 'new_umap'
+)
+
+# saveRDS(NSCLC, 'outputs/NSCLC_new_umap.rds')
+NSCLC <- readRDS('outputs/NSCLC_new_umap.rds')
+
+
+# rename features in core data ####
 # load data
 NSCLC <- readRDS('data/NSCLC_core.rds')
 NSCLC <- UpdateSeuratObject(NSCLC)
@@ -70,24 +89,5 @@ NSCLC@reductions$scANVI <- re_scANVI
 NSCLC@reductions$scVI <- re_scVI
 NSCLC@reductions$umap <- re_umap
 
-# saveRDS(NSCLC, file.path('outputs/NSCLC_core_renamed.rds')
+# saveRDS(NSCLC, 'outputs/NSCLC_core_renamed.rds')
 NSCLC <- readRDS('outputs/NSCLC_core_renamed.rds')
-
-
-# extract metadata ####
-meta_data <- NSCLC@meta.data
-
-# saveRDS(meta_data, 'outputs/meta_data.rds')
-meta_data <- readRDS('outputs/meta_data.rds')
-
-
-# rerun umap ####
-NSCLC <- RunUMAP(
-  NSCLC,
-  reduction = 'scANVI',
-  dims = 1:10,
-  reduction.name = 'new_umap'
-)
-
-# saveRDS(NSCLC, 'outputs/NSCLC_new_umap.rds')
-NSCLC <- readRDS('outputs/NSCLC_new_umap.rds')
