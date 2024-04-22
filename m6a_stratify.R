@@ -104,10 +104,10 @@ cancer_samples <- stratify_m6a_levels_in_platforms(
   thresholds = c(0, 0.4, 0.6, 1)
 )
 
-saveRDS(
-  cancer_samples,
-  'outputs/NSCLC_cancer_samples_stratified.rds'
-)
+# saveRDS(
+#   cancer_samples,
+#   'outputs/NSCLC_cancer_samples_stratified.rds'
+# )
 cancer_samples <-
   readRDS('outputs/NSCLC_cancer_samples_stratified.rds')
 
@@ -115,7 +115,7 @@ cancer_samples <-
 # subset primary cancer samples ####
 cancer_samples_primary <- subset(cancer_samples, origin == 'tumor_primary')
 
-saveRDS(cancer_samples_primary, 'outputs/NSCLC_cancer_primary_samples.rds')
+# saveRDS(cancer_samples_primary, 'outputs/NSCLC_cancer_primary_samples.rds')
 cancer_samples_primary <-
   readRDS('outputs/NSCLC_cancer_primary_samples.rds')
 
@@ -127,8 +127,8 @@ lusc_samples <- subset(
   disease == 'squamous cell lung carcinoma'
 )
 
-saveRDS(luad_samples, 'outputs/NSCLC_luad_primary_samples.rds')
-saveRDS(lusc_samples, 'outputs/NSCLC_lusc_primary_samples.rds')
+# saveRDS(luad_samples, 'outputs/NSCLC_luad_primary_samples.rds')
+# saveRDS(lusc_samples, 'outputs/NSCLC_lusc_primary_samples.rds')
 luad_samples <- readRDS('outputs/NSCLC_luad_primary_samples.rds')
 lusc_samples <- readRDS('outputs/NSCLC_lusc_primary_samples.rds')
 
@@ -140,7 +140,7 @@ luad_samples <- stratify_m6a_levels_in_platforms(
   thresholds = c(0, 0.4, 0.6, 1)
 )
 
-saveRDS(luad_samples, 'outputs/NSCLC_luad_primary_samples_stratified.rds')
+# saveRDS(luad_samples, 'outputs/NSCLC_luad_primary_samples_stratified.rds')
 luad_samples <- readRDS('outputs/NSCLC_luad_primary_samples_stratified.rds')
 
 lusc_samples <- stratify_m6a_levels_in_platforms(
@@ -149,5 +149,5 @@ lusc_samples <- stratify_m6a_levels_in_platforms(
   thresholds = c(0, 0.4, 0.6, 1)
 )
 
-saveRDS(lusc_samples, 'outputs/NSCLC_lusc_primary_samples_stratified.rds')
+# saveRDS(lusc_samples, 'outputs/NSCLC_lusc_primary_samples_stratified.rds')
 lusc_samples <- readRDS('outputs/NSCLC_lusc_primary_samples_stratified.rds')
