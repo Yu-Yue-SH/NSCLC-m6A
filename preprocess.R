@@ -35,14 +35,14 @@ NSCLC@reductions$scANVI <- re_scANVI
 NSCLC@reductions$scVI <- re_scVI
 NSCLC@reductions$umap <- re_umap
 
-# saveRDS(NSCLC, 'outputs/NSCLC_renamed.rds')
+saveRDS(NSCLC, 'outputs/NSCLC_renamed.rds')
 NSCLC <- readRDS('outputs/NSCLC_renamed.rds')
 
 
 # extract metadata ####
 meta_data <- NSCLC@meta.data
 
-# saveRDS(meta_data, 'outputs/meta_data.rds')
+saveRDS(meta_data, 'outputs/meta_data.rds')
 meta_data <- readRDS('outputs/meta_data.rds')
 
 
@@ -54,7 +54,7 @@ NSCLC <- RunUMAP(
   reduction.name = 'new_umap'
 )
 
-# saveRDS(NSCLC, 'outputs/NSCLC_new_umap.rds')
+saveRDS(NSCLC, 'outputs/NSCLC_new_umap.rds')
 NSCLC <- readRDS('outputs/NSCLC_new_umap.rds')
 
 
@@ -89,5 +89,5 @@ NSCLC@reductions$scANVI <- re_scANVI
 NSCLC@reductions$scVI <- re_scVI
 NSCLC@reductions$umap <- re_umap
 
-# saveRDS(NSCLC, 'outputs/NSCLC_core_renamed.rds')
+saveRDS(NSCLC, 'outputs/NSCLC_core_renamed.rds')
 NSCLC <- readRDS('outputs/NSCLC_core_renamed.rds')
