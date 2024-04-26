@@ -17,15 +17,21 @@ code for NSCLC-m6a-project
 ## m6a_stratify_smartseq2.R
 
 1. run stratify_m6a_levels_in_platforms() for Smart-seq2 samples
+1. change thresholds and rerun again
 
-## cell_chat.R
+## cellchat.R
 
-1. create function: run_cell_chat()
-1. run run_cell_chat() for cancer samples and all m6a levels
+1. create function: run_cellchat()
+1. run run_cellchat() for cancer samples and all m6a levels
 1. create function: cellchat_comparison()
 1. run cellchat_comparison() for all m6a levels
-1. subset 10x and rerun all functions
+1. subset 10x and rerun functions
 1. run cellchat for LUAD and LUSC
 
-## cell_chat_smartseq2.R
+## cellchat_smartseq2.R
 
+1. create function: run_cellchat()
+1. create function: cellchat_comparison()
+1. run run_cellchat() for cancer samples and all m6a levels
+1. run cellchat_comparison() for all m6a levels
+1. change thresholds and rerun run_cellchat() and cellchat_comparison()
