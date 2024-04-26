@@ -27,7 +27,7 @@ m6a <- c(writers, erasers, readers)
 
 
 # function: run_cell_chat ####
-run_cell_chat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
+run_cellchat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
   # create object
   cellchat <- createCellChat(data_input, meta, group.by = group)
 
@@ -113,7 +113,7 @@ cellchat_comparison <- function (
 data_input <- GetAssayData(smart_seq2_samples, layer = 'data')
 meta <- smart_seq2_samples@meta.data
 
-cellchat <- run_cell_chat(data_input, meta, 'new_broad_type', 8)
+cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
 
 saveRDS(cellchat, 'outputs/cellchat/smartseq2/cellchat_new_broad_type.rds')
 cellchat <-
@@ -121,7 +121,7 @@ cellchat <-
 
 # run for all m6a levels
 for (i in m6a) {
-  cellchat <- run_cell_chat(data_input, meta, paste0(i, '_level'), 8)
+  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
   saveRDS(
     cellchat,
     paste0(
@@ -166,7 +166,7 @@ data_input <- GetAssayData(smart_seq2_samples, layer = 'data')
 meta <- smart_seq2_samples@meta.data
 
 for (i in m6a) {
-  cellchat <- run_cell_chat(data_input, meta, paste0(i, '_level'), 8)
+  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
   saveRDS(
     cellchat,
     paste0(
