@@ -87,11 +87,10 @@ stratify_m6a_levels_in_platforms <- function (
 
 
 # subset smartseq2 samples ####
-smart_seq2_samples <- subset(NSCLC, platform == 'Smart-seq2')
-# smartseq2 has 22974 LUAD cells, 3070 LUSC cells and 8272 normal cells;
-# 3636 cancer cells;
-# 10051 normal adjacent cells, 10629 tumor metastasis cells and 12648
-# tumor primary cells
+smart_seq2_samples <- subset(NSCLC, platform == 'Smart-seq2' &
+  origin %in% c('tumor_metastasis', 'tumor_primary'))
+# smart_seq2_samples has 23277 cells, including 20427 LUAD cells and 2850 LUSC
+# cells. 10629 cells are tumor metastasis and 12648 cells are tumor primary.
 
 
 # run stratify_m6a_levels_in_platforms ####
@@ -104,7 +103,22 @@ smart_seq2_samples <- stratify_m6a_levels_in_platforms(
 
 saveRDS(
   smart_seq2_samples,
-  'outputs/NSCLC_smart_seq2_samples_stratified.rds'
+  'outputs/NSCLC_smart_seq2_samples_stratified_04.rds'
 )
 smart_seq2_samples <-
-  readRDS('outputs/NSCLC_smart_seq2_samples_stratified.rds')
+  readRDS('outputs/NSCLC_smart_seq2_samples_stratified_04.rds')
+
+# change thresholds
+smart_seq2_samples <- stratify_m6a_levels_in_platforms(
+  smart_seq2_samples,
+  platforms = 'Smart-seq2',
+  thresholds = c(0, 0.3, 0.7, 1),
+  m6a = m6a
+)
+
+saveRDS(
+  smart_seq2_samples,
+  'outputs/NSCLC_smart_seq2_samples_stratified_03.rds'
+)
+smart_seq2_samples <-
+  readRDS('outputs/NSCLC_smart_seq2_samples_stratified_03.rds')
