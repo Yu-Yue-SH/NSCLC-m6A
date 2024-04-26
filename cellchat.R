@@ -27,7 +27,7 @@ m6a <- c(writers, erasers, readers)
 
 
 # function: run_cell_chat ####
-run_cell_chat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
+run_cellchat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
   # create object
   cellchat <- createCellChat(data_input, meta, group.by = group)
 
@@ -55,7 +55,7 @@ run_cell_chat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
 data_input <- GetAssayData(cancer_samples, layer = 'data')
 meta <- cancer_samples@meta.data
 
-cellchat <- run_cell_chat(data_input, meta, 'new_broad_type', 8)
+cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
 
 saveRDS(cellchat, 'outputs/cellchat/cellchat_new_broad_type.rds')
 cellchat <- readRDS('outputs/cellchat/cellchat_new_broad_type.rds')
@@ -63,7 +63,7 @@ cellchat <- readRDS('outputs/cellchat/cellchat_new_broad_type.rds')
 
 # run for all m6a levels ####
 for (i in m6a) {
-  cellchat <- run_cell_chat(data_input, meta, paste0(i, '_level'), 8)
+  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
   saveRDS(cellchat, paste0('outputs/cellchat/origin/', 'cellchat_', i, '.rds'))
 }
 
@@ -145,14 +145,14 @@ cancer_samples_10x <- subset(cancer_samples, platform == '10x')
 data_input <- GetAssayData(cancer_samples_10x, layer = 'data')
 meta <- cancer_samples_10x@meta.data
 
-cellchat <- run_cell_chat(data_input, meta, 'new_broad_type', 8)
+cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
 
 saveRDS(cellchat, 'outputs/cellchat/10x/cellchat_new_broad_type.rds')
 cellchat <- readRDS('outputs/cellchat/10x/cellchat_new_broad_type.rds')
 
 # run for all m6a levels
 for (i in m6a) {
-  cellchat <- run_cell_chat(data_input, meta, paste0(i, '_level'), 8)
+  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
   saveRDS(
     cellchat,
     paste0('outputs/cellchat/10x/origin/', 'cellchat_', i, '.rds')
@@ -169,11 +169,11 @@ for (i in m6a) {
   comparison_list <- cellchat_comparison(cellchat, hi, lo, levels_hi, levels_lo)
 
   saveRDS(
-    comparison_list[1],
+    comparison_list[[1]],
     paste0('outputs/cellchat/10x/object_list/cellchat_', i, '_object_list.rds')
   )
   saveRDS(
-    comparison_list[2],
+    comparison_list[[2]],
     paste0('outputs/cellchat/10x/diff/cellchat_', i, '_diff.rds')
   )
 }
@@ -187,14 +187,14 @@ luad_samples <- readRDS('outputs/NSCLC_luad_primary_samples_stratified.rds')
 data_input <- GetAssayData(luad_samples, layer = 'data')
 meta <- luad_samples@meta.data
 
-cellchat <- run_cell_chat(data_input, meta, 'new_broad_type', 8)
+cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
 
 saveRDS(cellchat, 'outputs/cellchat/luad/cellchat_new_broad_type.rds')
 cellchat <- readRDS('outputs/cellchat/luad/cellchat_new_broad_type.rds')
 
 # run for all m6a levels
 for (i in m6a) {
-  cellchat <- run_cell_chat(data_input, meta, paste0(i, '_level'), 8)
+  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
 
   saveRDS(
     cellchat,
@@ -228,14 +228,14 @@ lusc_samples <- readRDS('outputs/NSCLC_lusc_primary_samples_stratified.rds')
 data_input <- GetAssayData(lusc_samples, layer = 'data')
 meta <- lusc_samples@meta.data
 
-cellchat <- run_cell_chat(data_input, meta, 'new_broad_type', 8)
+cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
 
 saveRDS(cellchat, 'outputs/cellchat/lusc/cellchat_new_broad_type.rds')
 cellchat <- readRDS('outputs/cellchat/lusc/cellchat_new_broad_type.rds')
 
 # run for all m6a levels
 for (i in m6a) {
-  cellchat <- run_cell_chat(data_input, meta, paste0(i, '_level'), 8)
+  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
 
   saveRDS(
     cellchat,
