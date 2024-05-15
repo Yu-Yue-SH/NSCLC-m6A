@@ -52,28 +52,67 @@ run_cellchat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
 }
 
 
-# function: cellchat_comparison ####
-hi <- c('B cell', 'High', 'cDC', 'Endothelial cell', 'Epithelial cell',
-        'Macrophage/Monocyte', 'Mast cell', 'Neutrophils', 'NK cell', 'pDC',
-        'Plasma cell', 'Stromal', 'T cell')
-lo <- c('B cell', 'Low', 'cDC', 'Endothelial cell', 'Epithelial cell',
-        'Macrophage/Monocyte', 'Mast cell', 'Neutrophils', 'NK cell', 'pDC',
-        'Plasma cell', 'Stromal', 'T cell')
-levels_hi <- c('B cell', 'cDC', 'Endothelial cell', 'Epithelial cell',
-               'Cancer cells', 'Macrophage/Monocyte', 'Mast cell',
-               'Neutrophils', 'NK cell', 'pDC', 'Plasma cell', 'Stromal',
-               'T cell')
-levels_lo <- c('B cell', 'cDC', 'Endothelial cell', 'Epithelial cell',
-               'Cancer cells', 'Macrophage/Monocyte', 'Mast cell',
-               'Neutrophils', 'NK cell', 'pDC', 'Plasma cell', 'Stromal',
-               'T cell')
+# run run_cell_chat ####
+data_input <- GetAssayData(smart_seq2_samples, layer = 'data')
+meta <- smart_seq2_samples@meta.data
 
+cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
+
+saveRDS(cellchat, 'outputs/cellchat/smartseq2/cellchat_new_broad_type.rds')
+cellchat <-
+  readRDS('outputs/cellchat/smartseq2/cellchat_new_broad_type.rds')
+
+# run for all m6a levels
+for (i in m6a) {
+  # first high then low
+  for (j in c('High', 'Low')) {
+    seurat_obj <- subset(
+      smart_seq2_samples,
+      cells = which(
+        smart_seq2_samples$new_broad_type != 'Cancer cells' |
+          smart_seq2_samples[[paste0(i, '_level')]] == j
+      )
+    )
+    data_input <- GetAssayData(seurat_obj, layer = 'data')
+    meta <- seurat_obj@meta.data
+    cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
+    saveRDS(
+      cellchat,
+      paste0('outputs/cellchat/smartseq2/04/raw/cellchat_', i, '_', j, '.rds')
+    )
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# function: cellchat_comparison ####
 cellchat_comparison <- function (
   cellchat,
-  hi = hi,
-  lo = lo,
-  levels_hi = levels_hi,
-  levels_lo = levels_hi
+  hi = c('B cell', 'High', 'cDC', 'Endothelial cell', 'Epithelial cell',
+         'Macrophage/Monocyte', 'Mast cell', 'Neutrophils', 'NK cell', 'pDC',
+         'Plasma cell', 'Stromal', 'T cell'),
+  lo = c('B cell', 'Low', 'cDC', 'Endothelial cell', 'Epithelial cell',
+         'Macrophage/Monocyte', 'Mast cell', 'Neutrophils', 'NK cell', 'pDC',
+         'Plasma cell', 'Stromal', 'T cell'),
+  levels_hi = c('B cell', 'cDC', 'Endothelial cell', 'Epithelial cell',
+                'Cancer cells', 'Macrophage/Monocyte', 'Mast cell',
+                'Neutrophils', 'NK cell', 'pDC', 'Plasma cell', 'Stromal',
+                'T cell'),
+  levels_lo = c('B cell', 'cDC', 'Endothelial cell', 'Epithelial cell',
+                'Cancer cells', 'Macrophage/Monocyte', 'Mast cell',
+                'Neutrophils', 'NK cell', 'pDC', 'Plasma cell', 'Stromal',
+                'T cell')
 ) {
   cellchat_hi <- subsetCellChat(cellchat, idents.use = hi)
   cellchat_lo <- subsetCellChat(cellchat, idents.use = lo)
@@ -109,31 +148,6 @@ cellchat_comparison <- function (
 }
 
 
-# run run_cell_chat ####
-data_input <- GetAssayData(smart_seq2_samples, layer = 'data')
-meta <- smart_seq2_samples@meta.data
-
-cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
-
-saveRDS(cellchat, 'outputs/cellchat/smartseq2/cellchat_new_broad_type.rds')
-cellchat <-
-  readRDS('outputs/cellchat/smartseq2/cellchat_new_broad_type.rds')
-
-# run for all m6a levels
-for (i in m6a) {
-  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
-  saveRDS(
-    cellchat,
-    paste0(
-      'outputs/cellchat/smartseq2/04/origin/',
-      'cellchat_',
-      i,
-      '.rds'
-    )
-  )
-}
-
-
 # run cellchat_comparison ####
 for (i in m6a) {
   # load data
@@ -154,48 +168,5 @@ for (i in m6a) {
   saveRDS(
     comparison_list[[2]],
     paste0('outputs/cellchat/smartseq2/04/diff/cellchat_', i, '_diff.rds')
-  )
-}
-
-
-# change m6a thresholds ####
-smart_seq2_samples <-
-  readRDS('outputs/NSCLC_smart_seq2_samples_stratified_03.rds')
-
-data_input <- GetAssayData(smart_seq2_samples, layer = 'data')
-meta <- smart_seq2_samples@meta.data
-
-for (i in m6a) {
-  cellchat <- run_cellchat(data_input, meta, paste0(i, '_level'), 8)
-  saveRDS(
-    cellchat,
-    paste0(
-      'outputs/cellchat/smartseq2/03/origin/',
-      'cellchat_',
-      i,
-      '.rds'
-    )
-  )
-}
-
-for (i in m6a) {
-  # load data
-  cellchat <-
-    readRDS(paste0('outputs/cellchat/smartseq2/03/origin/cellchat_', i, '.rds'))
-
-  # run cellchat_comparison
-  comparison_list <- cellchat_comparison(cellchat)
-
-  saveRDS(
-    comparison_list[[1]],
-    paste0(
-      'outputs/cellchat/smartseq2/03/object_list/cellchat_',
-      i,
-      '_object_list.rds'
-    )
-  )
-  saveRDS(
-    comparison_list[[2]],
-    paste0('outputs/cellchat/smartseq2/03/diff/cellchat_', i, '_diff.rds')
   )
 }
