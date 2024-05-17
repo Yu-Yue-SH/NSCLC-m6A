@@ -63,7 +63,7 @@ cellchat_comparison <- function (cellchat_hi, cellchat_lo) {
     cell.prefix = TRUE
   )
 
-  return(list(object_list, cellchat_diff))
+  return(cellchat_diff)
 }
 
 
@@ -122,18 +122,67 @@ for (i in m6a) {
   )
 
   # run cellchat_comparison
-  comparison_list <- cellchat_comparison(cellchat_hi, cellchat_lo)
+  cellchat_diff <- cellchat_comparison(cellchat_hi, cellchat_lo)
 
   saveRDS(
-    comparison_list[[1]],
+    cellchat_diff,
+    paste0('outputs/cellchat/smartseq2/04/diff/cellchat_', i, '_diff.rds')
+  )
+}
+
+
+# change threschold ####
+smart_seq2_samples <-
+  readRDS('outputs/NSCLC_smart_seq2_samples_stratified_03.rds')
+
+# run run_cell_chat
+for (i in m6a) {
+  # first high then low
+  for (j in c('High', 'Low')) {
+    seurat_obj <- subset(
+      smart_seq2_samples,
+      cells = which(
+        smart_seq2_samples$new_broad_type != 'Cancer cells' |
+          smart_seq2_samples[[paste0(i, '_level')]] == j
+      )
+    )
+    data_input <- GetAssayData(seurat_obj, layer = 'data')
+    meta <- seurat_obj@meta.data
+    cellchat <- run_cellchat(data_input, meta, 'new_broad_type', 8)
+    saveRDS(
+      cellchat,
+      paste0('outputs/cellchat/smartseq2/03/raw/cellchat_', i, '_', j, '.rds')
+    )
+  }
+}
+
+# run cellchat_comparison
+for (i in m6a) {
+  # load data
+  cellchat_hi <- readRDS(
     paste0(
-      'outputs/cellchat/smartseq2/04/list/cellchat_',
+      'outputs/cellchat/smartseq2/03/raw/cellchat_',
       i,
-      '_object_list.rds'
+      '_',
+      'High',
+      '.rds'
     )
   )
+  cellchat_lo <- readRDS(
+    paste0(
+      'outputs/cellchat/smartseq2/03/raw/cellchat_',
+      i,
+      '_',
+      'Low',
+      '.rds'
+    )
+  )
+
+  # run cellchat_comparison
+  cellchat_diff <- cellchat_comparison(cellchat_hi, cellchat_lo)
+
   saveRDS(
-    comparison_list[[2]],
-    paste0('outputs/cellchat/smartseq2/04/diff/cellchat_', i, '_diff.rds')
+    cellchat_diff,
+    paste0('outputs/cellchat/smartseq2/03/diff/cellchat_', i, '_diff.rds')
   )
 }
