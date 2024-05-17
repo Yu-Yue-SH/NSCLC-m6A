@@ -52,6 +52,21 @@ run_cellchat <- function(data_input, meta, group = 'new_broad_type', w = 8) {
 }
 
 
+# function: cellchat_comparison ####
+cellchat_comparison <- function (cellchat_hi, cellchat_lo) {
+  # merge object
+  object_list <- list(lo = cellchat_lo, hi = cellchat_hi)
+
+  cellchat_diff <- mergeCellChat(
+    object_list,
+    add.names = names(object_list),
+    cell.prefix = TRUE
+  )
+
+  return(list(object_list, cellchat_diff))
+}
+
+
 # run run_cell_chat ####
 data_input <- GetAssayData(smart_seq2_samples, layer = 'data')
 meta <- smart_seq2_samples@meta.data
@@ -84,83 +99,35 @@ for (i in m6a) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-# function: cellchat_comparison ####
-cellchat_comparison <- function (
-  cellchat,
-  hi = c('B cell', 'High', 'cDC', 'Endothelial cell', 'Epithelial cell',
-         'Macrophage/Monocyte', 'Mast cell', 'Neutrophils', 'NK cell', 'pDC',
-         'Plasma cell', 'Stromal', 'T cell'),
-  lo = c('B cell', 'Low', 'cDC', 'Endothelial cell', 'Epithelial cell',
-         'Macrophage/Monocyte', 'Mast cell', 'Neutrophils', 'NK cell', 'pDC',
-         'Plasma cell', 'Stromal', 'T cell'),
-  levels_hi = c('B cell', 'cDC', 'Endothelial cell', 'Epithelial cell',
-                'Cancer cells', 'Macrophage/Monocyte', 'Mast cell',
-                'Neutrophils', 'NK cell', 'pDC', 'Plasma cell', 'Stromal',
-                'T cell'),
-  levels_lo = c('B cell', 'cDC', 'Endothelial cell', 'Epithelial cell',
-                'Cancer cells', 'Macrophage/Monocyte', 'Mast cell',
-                'Neutrophils', 'NK cell', 'pDC', 'Plasma cell', 'Stromal',
-                'T cell')
-) {
-  cellchat_hi <- subsetCellChat(cellchat, idents.use = hi)
-  cellchat_lo <- subsetCellChat(cellchat, idents.use = lo)
-
-  # rename idents
-  cellchat_hi <- setIdent(
-    cellchat_hi,
-    ident.use = 'new_broad_type',
-    levels = levels_hi
-  )
-  cellchat_lo <- setIdent(
-    cellchat_lo,
-    ident.use = 'new_broad_type',
-    levels = levels_lo
-  )
-
-  cellchat_hi <- filterCommunication(cellchat_hi, min.cells = 10)
-  cellchat_hi <- computeCommunProbPathway(cellchat_hi)
-  cellchat_hi <- aggregateNet(cellchat_hi)
-  cellchat_lo <- filterCommunication(cellchat_lo, min.cells = 10)
-  cellchat_lo <- computeCommunProbPathway(cellchat_lo)
-  cellchat_lo <- aggregateNet(cellchat_lo)
-
-  # merge object
-  object_list <- list(lo = cellchat_lo, hi = cellchat_hi)
-  cellchat_diff <- mergeCellChat(
-    object_list,
-    add.names = names(object_list),
-    cell.prefix = TRUE
-  )
-
-  return(list(object_list, cellchat_diff))
-}
-
-
 # run cellchat_comparison ####
 for (i in m6a) {
   # load data
-  cellchat <-
-    readRDS(paste0('outputs/cellchat/smartseq2/04/origin/cellchat_', i, '.rds'))
+  cellchat_hi <- readRDS(
+    paste0(
+      'outputs/cellchat/smartseq2/04/raw/cellchat_',
+      i,
+      '_',
+      'High',
+      '.rds'
+    )
+  )
+  cellchat_lo <- readRDS(
+    paste0(
+      'outputs/cellchat/smartseq2/04/raw/cellchat_',
+      i,
+      '_',
+      'Low',
+      '.rds'
+    )
+  )
 
   # run cellchat_comparison
-  comparison_list <- cellchat_comparison(cellchat)
+  comparison_list <- cellchat_comparison(cellchat_hi, cellchat_lo)
 
   saveRDS(
     comparison_list[[1]],
     paste0(
-      'outputs/cellchat/smartseq2/04/object_list/cellchat_',
+      'outputs/cellchat/smartseq2/04/list/cellchat_',
       i,
       '_object_list.rds'
     )
